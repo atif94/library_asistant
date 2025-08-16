@@ -8,7 +8,7 @@ from django.views import generic
 def index(request):
     return HttpResponse("Hello, World!")
 
-#@login_required
+@login_required
 def my_books(request):
     return render(request, 'catalog/my_books.html')
 
