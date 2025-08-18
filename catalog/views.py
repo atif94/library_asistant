@@ -32,7 +32,9 @@ def my_books(request):
     return render(request, 'catalog/my_books.html')
 
 def book_detail(request,pk):
-    return render(request, 'catalog/book_detail.html',{"book": None})
+    
+        return render(request, 'catalog/book_detail.html',{"book": None})
+    
 
 def author_books(request,pk):
     return render(request, 'catalog/author_books.html',{"author": None,"book":[]})
