@@ -27,17 +27,30 @@ class RememberMeLoginView(LoginView):
 def index(request):
     return HttpResponse("Hello, World!")
 
-@login_required
-def my_books(request):
-    return render(request, 'catalog/my_books.html')
-
-def book_detail(request,pk):
-    
-        return render(request, 'catalog/book_detail.html',{"book": None})
-    
-
-def author_books(request,pk):
-    return render(request, 'catalog/author_books.html',{"author": None,"book":[]})
 
 def healthz(request):
-    return HttpResponse("OK",status=200)
+    return HttpResponse("ok", status=200)
+
+
+@login_required
+def my_books(request):
+    qs = (
+        Holding.objects
+        .filter(user=request.user)
+        .select_related("book", "book__author")
+        .order_by("-purchased_at", "book__title")
+    )
+    return render(request, "catalog/my_books.html", {"holdings": qs})
+
+
+@login_required
+def book_detail(request, pk: int):
+    book = get_object_or_404(Book.objects.select_related("author"), pk=pk)
+    return render(request, "catalog/book_detail.html", {"book": book})
+
+
+@login_required
+def author_books(request, pk: int):
+    author = get_object_or_404(Author, pk=pk)
+    books = author.books.order_by("title")
+    return render(request, "catalog/author_books.html", {"author": author, "books": books})

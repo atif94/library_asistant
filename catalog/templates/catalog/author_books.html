@@ -1,8 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Author Books · Library{% endblock %}
+{% block title %}Books by {{ author.name }} · Library{% endblock %}
 {% block content %}
-<h1 class="h4 mb-3">Books by Author</h1>
-<ul class="list-group">
-  <li class="list-group-item">—</li>
-</ul>
+<h1 class="h4 mb-3">Books by {{ author.name }}</h1>
+{% if books %}
+  <ul class="list-group">
+    {% for b in books %}
+      <li class="list-group-item">
+        <a href="{% url 'book_detail' b.id %}">{{ b.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-muted">No books found for this author.</p>
+{% endif %}
 {% endblock %}

@@ -1,7 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Book · Library{% endblock %}
+{% block title %}{{ book.title }} · Library{% endblock %}
 {% block content %}
-<h1 class="h4 mb-3">Book Detail</h1>
-<p class="text-muted">Coming in Step 2.</p>
+<h1 class="h4 mb-1">{{ book.title }}</h1>
+<p class="mb-3">
+  by <a href="{% url 'author_books' book.author.id %}">{{ book.author.name }}</a>
+</p>
+{% if book.description %}
+  <p>{{ book.description }}</p>
+{% else %}
+  <p class="text-muted">No description available.</p>
+{% endif %}
 <a href="{% url 'my_books' %}">&larr; Back to My Books</a>
 {% endblock %}
