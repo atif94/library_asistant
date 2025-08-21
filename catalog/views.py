@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from django.views import generic
 
 # Create your views here.
@@ -52,5 +54,17 @@ def book_detail(request, pk: int):
 @login_required
 def author_books(request, pk: int):
     author = get_object_or_404(Author, pk=pk)
-    books = author.books.order_by("title")
-    return render(request, "catalog/author_books.html", {"author": author, "books": books})
+    qs = author.books.order_by("title")
+    paginator = Paginator(qs, 10)  # 10 per page
+    page_number = request.GET.get("page", 1)
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    return render(
+        request,
+        "catalog/author_books.html",
+        {"author": author, "page_obj": page_obj, "books": page_obj.object_list},
+    )

@@ -1,23 +1,29 @@
-import pytest
-from django.contrib.auth import get_user_model
-from catalog.models import Author, Book, Holding
 from datetime import date
 
+from django.contrib.auth import get_user_model
+import pytest
+
+from catalog.models import Author, Book, Holding
+
 User = get_user_model()
+
 
 @pytest.fixture
 def user(db):
     u = User.objects.create_user(username="alice", password="Secret123!")
     return u
 
+
 @pytest.fixture
 def other_user(db):
     u = User.objects.create_user(username="bob", password="Secret123!")
     return u
 
+
 @pytest.fixture
 def author(db):
     return Author.objects.create(name="George Orwell")
+
 
 @pytest.fixture
 def books(db, author):
@@ -26,6 +32,7 @@ def books(db, author):
     for i in range(1, 13):
         objs.append(Book.objects.create(title=f"Book {i}", author=author))
     return objs
+
 
 @pytest.fixture
 def holdings(db, user, other_user, books):

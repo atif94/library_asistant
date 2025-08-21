@@ -2,14 +2,33 @@
 {% block title %}Books by {{ author.name }} · Library{% endblock %}
 {% block content %}
 <h1 class="h4 mb-3">Books by {{ author.name }}</h1>
+
 {% if books %}
-  <ul class="list-group">
+  <ul class="list-group mb-3">
     {% for b in books %}
       <li class="list-group-item">
         <a href="{% url 'book_detail' b.id %}">{{ b.title }}</a>
       </li>
     {% endfor %}
   </ul>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+    <nav aria-label="Pagination">
+      <ul class="pagination">
+        <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}"{% if not page_obj.has_previous %} tabindex="-1" aria-disabled="true"{% endif %}>&laquo;</a>
+        </li>
+        {% for p in page_obj.paginator.page_range %}
+          <li class="page-item {% if p == page_obj.number %}active{% endif %}">
+            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+          </li>
+        {% endfor %}
+        <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}"{% if not page_obj.has_next %} tabindex="-1" aria-disabled="true"{% endif %}>&raquo;</a>
+        </li>
+      </ul>
+    </nav>
+  {% endif %}
 {% else %}
   <p class="text-muted">No books found for this author.</p>
 {% endif %}

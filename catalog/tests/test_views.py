@@ -1,5 +1,6 @@
-import pytest
 from django.urls import reverse
+import pytest
+
 
 @pytest.mark.django_db
 def test_login_required_redirects_my_books(client):
@@ -8,6 +9,7 @@ def test_login_required_redirects_my_books(client):
     # should redirect to login with next param
     assert res.status_code == 302
     assert reverse("login") in res["Location"]
+
 
 @pytest.mark.django_db
 def test_my_books_shows_only_current_user_holdings(client, user, holdings):
@@ -22,6 +24,7 @@ def test_my_books_shows_only_current_user_holdings(client, user, holdings):
     assert "Book 2" in html
     # Bob's book absent
     assert "Book 3" not in html
+
 
 @pytest.mark.django_db
 def test_book_detail_and_author_books_render(client, user, books):
